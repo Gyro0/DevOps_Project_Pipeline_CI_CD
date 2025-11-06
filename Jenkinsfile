@@ -1,0 +1,92 @@
+pipeline {
+    agent any
+    
+    tools {
+        maven 'Maven-3.9.11'
+        jdk 'JDK-17'
+    }
+    
+    environment {
+        // Variables d'environnement
+        MAVEN_OPTS = '-Xmx1024m'
+    }
+    
+    stages {
+        stage('1. Cloner le repo') {
+            steps {
+                echo 'Clonage du repository depuis GitHub...'
+                checkout scm
+            }
+        }
+        
+        stage('2. Compiler le projet') {
+            steps {
+                echo 'Compilation du projet Maven...'
+                bar 'mvn clean compile'
+                // Pour Windows, utilisez : bat 'mvn clean compile'
+            }
+        }
+        
+        stage('3. Lancer les tests unitaires') {
+            steps {
+                echo 'Exécution des tests unitaires...'
+                bar 'mvn test'
+                // Pour Windows : bat 'mvn test'
+            }
+            post {
+                always {
+                    // Publier les résultats des tests
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+        
+        stage('4. Générer le package WAR/JAR') {
+            steps {
+                echo 'Création du package...'
+                bar 'mvn package -DskipTests'
+                // Pour Windows : bat 'mvn package -DskipTests'
+            }
+            post {
+                success {
+                    // Archiver l'artefact généré
+                    archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
+                }
+            }
+        }
+        
+        stage('5. Analyse SonarQube') {
+            steps {
+                echo 'Lancement de l\'analyse SonarQube...'
+                script {
+                    // Cette étape sera configurée à l'Étape 3
+                    withSonarQubeEnv('SonarQube') {
+                        bar 'mvn sonar:sonar'
+                        // Pour Windows : bat 'mvn sonar:sonar'
+                    }
+                }
+            }
+        }
+        
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline exécuté avec succès !'
+        }
+        failure {
+            echo 'Le pipeline a échoué.'
+        }
+        always {
+            echo 'Nettoyage de l\'espace de travail...'
+            cleanWs()
+        }
+    }
+}

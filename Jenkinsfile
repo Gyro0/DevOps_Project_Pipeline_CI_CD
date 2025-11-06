@@ -54,28 +54,31 @@ pipeline {
                 }
             }
         }
+        stage('5. Analyse SonarQube') {
+            steps {
+                echo 'Lancement de l\'analyse SonarQube...'
+                withSonarQubeEnv('SonarQube') {
+                    bat """
+                        mvn sonar:sonar ^
+                        -Dsonar.projectKey=yourwaytoitaly ^
+                        -Dsonar.projectName=YourWayToItaly ^
+                        -Dsonar.host.url=http://localhost:9000 ^
+                        -Dsonar.sources=src/main/java ^
+                        -Dsonar.tests=src/test/java ^
+                        -Dsonar.java.binaries=target/classes
+                    """
+                }
+            }
+        }
         
-        // stage('5. Analyse SonarQube') {
-        //     steps {
-        //         echo 'Lancement de l\'analyse SonarQube...'
-        //         script {
-        //             // Cette étape sera configurée à l'Étape 3
-        //             withSonarQubeEnv('SonarQube') {
-        //                 bat 'mvn sonar:sonar'
-        //                 // Pour Windows : bat 'mvn sonar:sonar'
-        //             }
-        //         }
-        //     }
-        // }
-        
-        // stage('Quality Gate') {
-        //     steps {
-        //         timeout(time: 5, unit: 'MINUTES') {
-        //             waitForQualityGate abortPipeline: true
-        //         }
-        //     }
-        // }
-    }
+        stage('6. Quality Gate') {
+            steps {
+                echo 'Vérification du Quality Gate...'
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
     
     post {
         success {

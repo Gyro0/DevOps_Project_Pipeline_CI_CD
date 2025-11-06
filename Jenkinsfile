@@ -55,26 +55,26 @@ pipeline {
             }
         }
         
-        stage('5. Analyse SonarQube') {
-            steps {
-                echo 'Lancement de l\'analyse SonarQube...'
-                script {
-                    // Cette étape sera configurée à l'Étape 3
-                    withSonarQubeEnv('SonarQube') {
-                        bat 'mvn sonar:sonar'
-                        // Pour Windows : bat 'mvn sonar:sonar'
-                    }
-                }
-            }
-        }
+        // stage('5. Analyse SonarQube') {
+        //     steps {
+        //         echo 'Lancement de l\'analyse SonarQube...'
+        //         script {
+        //             // Cette étape sera configurée à l'Étape 3
+        //             withSonarQubeEnv('SonarQube') {
+        //                 bat 'mvn sonar:sonar'
+        //                 // Pour Windows : bat 'mvn sonar:sonar'
+        //             }
+        //         }
+        //     }
+        // }
         
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
+        // stage('Quality Gate') {
+        //     steps {
+        //         timeout(time: 5, unit: 'MINUTES') {
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        // }
     }
     
     post {

@@ -22,7 +22,7 @@ pipeline {
         stage('2. Compiler le projet') {
             steps {
                 echo 'Compilation du projet Maven...'
-                bar 'mvn clean compile'
+                bat 'mvn clean compile'
                 // Pour Windows, utilisez : bat 'mvn clean compile'
             }
         }
@@ -30,7 +30,7 @@ pipeline {
         stage('3. Lancer les tests unitaires') {
             steps {
                 echo 'Exécution des tests unitaires...'
-                bar 'mvn test'
+                bat 'mvn test'
                 // Pour Windows : bat 'mvn test'
             }
             post {
@@ -44,7 +44,7 @@ pipeline {
         stage('4. Générer le package WAR/JAR') {
             steps {
                 echo 'Création du package...'
-                bar 'mvn package -DskipTests'
+                bat 'mvn package -DskipTests'
                 // Pour Windows : bat 'mvn package -DskipTests'
             }
             post {
@@ -61,7 +61,7 @@ pipeline {
                 script {
                     // Cette étape sera configurée à l'Étape 3
                     withSonarQubeEnv('SonarQube') {
-                        bar 'mvn sonar:sonar'
+                        bat 'mvn sonar:sonar'
                         // Pour Windows : bat 'mvn sonar:sonar'
                     }
                 }

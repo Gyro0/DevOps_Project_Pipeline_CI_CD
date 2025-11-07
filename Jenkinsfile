@@ -54,15 +54,7 @@ pipeline {
             steps {
                 echo 'Lancement de l\'analyse SonarQube...'
                 withSonarQubeEnv('SonarQube') {
-                    bat """
-                        mvn sonar:sonar ^
-                        -Dsonar.projectKey=YourWayToItaly ^
-                        -Dsonar.projectName=YourWayToItaly ^
-                        -Dsonar.host.url=http://localhost:9000 ^
-                        -Dsonar.sources=src/main/java ^
-                        -Dsonar.tests=src/test/java ^
-                        -Dsonar.java.binaries=target/classes
-                    """
+                    bat 'mvn sonar:sonar'
                 }
             }
         }

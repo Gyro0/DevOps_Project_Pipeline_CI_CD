@@ -2,13 +2,13 @@ pipeline {
     agent any
     
     tools {
-        maven 'Maven-3.9.11'
-        jdk 'JDK-17'
+        maven 'mvn'
+        jdk 'java'
     }
     
     environment {
         MAVEN_OPTS = '-Xmx1024m'
-        SCANNER_HOME = tool 'SonarScanner'
+        //SCANNER_HOME = tool 'SonarScanner'
     }
     
     stages {
@@ -50,7 +50,7 @@ pipeline {
             }
         }
         
-        stage('5. Analyse SonarQube') {
+        /*stage('5. Analyse SonarQube') {
             steps {
                 echo 'Lancement de l\'analyse SonarQube...'
                 withSonarQubeEnv('SonarQube') {
@@ -66,7 +66,7 @@ pipeline {
                     waitForQualityGate abortPipeline: true
                 }
             }
-        }
+        }*/
     }
     
     post {

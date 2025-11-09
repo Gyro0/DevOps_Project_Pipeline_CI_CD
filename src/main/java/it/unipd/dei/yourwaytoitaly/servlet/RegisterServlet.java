@@ -269,19 +269,20 @@ public class RegisterServlet extends AbstractDatabaseServlet {
             String emailsite = sc.getInitParameter("emailSite");
             String passEmail = sc.getInitParameter("passwordEmail");
             // sending confirmation email
-            EmailSender mail= new EmailSender(email , emailsite , passEmail);
+            // DISABLED FOR LOCAL DEVELOPMENT - Email sending commented out
+            // EmailSender mail= new EmailSender(email , emailsite , passEmail);
 
             //send email and check if email is sent correctly
-            if (!mail.sendConfirmationEmail("Your Way To Italy - Account successfully registered",
-                    "Congratulations, your account has successfully been registered. " +
-                            "You can now start your Journey!")){
-                ErrorCode ec = ErrorCode.INTERNAL_ERROR;
-                Message m = new Message(ec.getErrorMessage(),
-                        ec.getHTTPCode(), "Email not sent.");
-                res.setStatus(ec.getHTTPCode());
-                m.toJSON(res.getOutputStream());
-                return;
-            }
+            // if (!mail.sendConfirmationEmail("Your Way To Italy - Account successfully registered",
+            //         "Congratulations, your account has successfully been registered. " +
+            //                 "You can now start your Journey!")){
+            //     ErrorCode ec = ErrorCode.INTERNAL_ERROR;
+            //     Message m = new Message(ec.getErrorMessage(),
+            //             ec.getHTTPCode(), "Email not sent.");
+            //     res.setStatus(ec.getHTTPCode());
+            //     m.toJSON(res.getOutputStream());
+            //     return;
+            // }
 
             //everything went fine
             Message success = new Message("Successful registration!");

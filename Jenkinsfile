@@ -22,24 +22,30 @@ pipeline {
         stage('2. Compiler le projet') {
             steps {
                 echo 'Compilation du projet Maven...'
-                if (isUnix()){
-                    sh 'mvn clean compile'
-                } 
-                else{
-                    bat 'mvn clean compile'
+                script{
+                    if (isUnix()){
+                        sh 'mvn clean compile'
+                    } 
+                    else{
+                        bat 'mvn clean compile'
+                    }
                 }
+
             }
         }
         
         stage('3. Lancer les tests unitaires') {
             steps {
                 echo 'Exécution des tests unitaires...'
-                if (isUnix()){
-                    sh 'mvn test'
-                } 
-                else{
-                    bat 'mvn test'
+                script{
+                    if (isUnix()){
+                        sh 'mvn test'
+                    } 
+                    else{
+                        bat 'mvn test'
+                    }
                 }
+
             }
             post {
                 always {
@@ -47,16 +53,21 @@ pipeline {
                 }
             }
         }
+
+        
         
         stage('4. Générer le package WAR/JAR') {
             steps {
                 echo 'Création du package WAR...'
-                if (isUnix()){
-                    sh 'mvn package -DskipTests'
+                script{
+                    if (isUnix()){
+                        sh 'mvn package -DskipTests'
+                    }
+                    else{
+                        bat 'mvn package -DskipTests'
+                    } 
                 }
-                else{
-                    bat 'mvn package -DskipTests'
-                } 
+
             }
             post {
                 success {
@@ -69,7 +80,14 @@ pipeline {
             steps {
                 echo 'Lancement de l\'analyse SonarQube...'
                 withSonarQubeEnv('SonarQube') {
-                    bat 'mvn sonar:sonar'
+                    script{
+                        if (isUnix()){
+                            sh 'mvn sonar:sonar'
+                        } 
+                        else{
+                            bat 'mvn sonar:sonar'
+                        }
+                    }
                 }
             }
         }

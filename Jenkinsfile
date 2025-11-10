@@ -22,14 +22,14 @@ pipeline {
         stage('2. Compiler le projet') {
             steps {
                 echo 'Compilation du projet Maven...'
-                bat 'mvn clean compile'
+                sh 'mvn clean compile'
             }
         }
         
         stage('3. Lancer les tests unitaires') {
             steps {
                 echo 'Exécution des tests unitaires...'
-                bat 'mvn test'
+                sh 'mvn test'
             }
             post {
                 always {
@@ -41,7 +41,7 @@ pipeline {
         stage('4. Générer le package WAR/JAR') {
             steps {
                 echo 'Création du package WAR...'
-                bat 'mvn package -DskipTests'
+                sh 'mvn package -DskipTests'
             }
             post {
                 success {

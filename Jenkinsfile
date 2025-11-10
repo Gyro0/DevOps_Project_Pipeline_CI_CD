@@ -14,6 +14,15 @@ pipeline {
     stages {
         stage('1. Cloner le repo') {
             steps {
+                script{
+                    if (isUnix()){
+                        sh 'git config --global core.autocrlf input'
+                    } 
+                    else{
+                        bat 'git config --global core.autocrlf true'
+                    }
+                }
+
                 echo 'Clonage du repository depuis GitHub...'
                 checkout scm
             }

@@ -85,7 +85,7 @@ pipeline {
             }
         }
         
-        /*stage('5. Analyse SonarQube') {
+        stage('5. Analyse SonarQube') {
             steps {
                 echo 'Lancement de l\'analyse SonarQube...'
                 withSonarQubeEnv('SonarQube') {
@@ -108,7 +108,7 @@ pipeline {
                     waitForQualityGate abortPipeline: true
                 }
             }
-        }*/
+        }
     }
     
     post {

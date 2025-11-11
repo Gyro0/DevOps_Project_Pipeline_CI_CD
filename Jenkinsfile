@@ -8,7 +8,7 @@ pipeline {
     
     environment {
         MAVEN_OPTS = '-Xmx1024m'
-        //SCANNER_HOME = tool 'SonarScanner'
+        SCANNER_HOME = tool 'SonarScanner'
     }
     
     stages {
@@ -18,9 +18,6 @@ pipeline {
                     if (isUnix()){
                         sh 'git config --global core.autocrlf input'
                     } 
-                    else{
-                        bat 'git config --global core.autocrlf true'
-                    }
                 }
 
                 echo 'Clonage du repository depuis GitHub...'
@@ -45,7 +42,7 @@ pipeline {
         
         stage('3. Lancer les tests unitaires') {
             steps {
-                echo 'Exécution des tests unitaires...'
+                echo 'Execution des tests unitaires...'
                 script{
                     if (isUnix()){
                         sh 'mvn test'
@@ -65,9 +62,9 @@ pipeline {
 
         
         
-        stage('4. Générer le package WAR/JAR') {
+        stage('4. Generer le package WAR/JAR') {
             steps {
-                echo 'Création du package WAR...'
+                echo 'Creation du package WAR...'
                 script{
                     if (isUnix()){
                         sh 'mvn package -DskipTests'
@@ -103,7 +100,7 @@ pipeline {
         
         stage('6. Quality Gate') {
             steps {
-                echo 'Vérification du Quality Gate...'
+                echo 'Verification du Quality Gate...'
                 timeout(time: 5, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
@@ -113,10 +110,10 @@ pipeline {
     
     post {
         success {
-            echo '✓ Pipeline exécuté avec succès!'
+            echo '✓ Pipeline execute avec succès!'
         }
         failure {
-            echo '✗ Le pipeline a échoué.'
+            echo '✗ Le pipeline a echoue.'
         }
         always {
             echo 'Nettoyage de l\'espace de travail...'

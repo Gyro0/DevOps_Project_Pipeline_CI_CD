@@ -110,14 +110,15 @@ pipeline {
     
     post {
         success {
-            echo '✓ Pipeline execute avec succès!'
+            echo '==============Le Pipeline est execute avec succes!=============='
         }
         failure {
-            echo '✗ Le pipeline a echoue.'
+            echo '==============Le pipeline a echoue.=============='
         }
         always {
-            echo 'Nettoyage de l\'espace de travail...'
-            cleanWs()
+            echo "workspace: ${WORKSPACE}"
+            //echo 'Cleaning workspace...'
+            //cleanWs()
         }
     }
 }

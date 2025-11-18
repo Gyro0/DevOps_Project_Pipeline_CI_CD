@@ -48,28 +48,28 @@ Since: 1.0
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 
     <!-- Font awesome -->
-    <link href="/ywti_wa2021_war/css/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet">
+    <link href="/css/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet">
 
     <!-- W3 school CSS -->
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
     <!-- Common CSS -->
-    <link href="/ywti_wa2021_war/css/style/ywti.css" rel="stylesheet" type="text/css">
+    <link href="/css/style/ywti.css" rel="stylesheet" type="text/css">
 
     <!-- Custom CSS -->
-    <link href="/ywti_wa2021_war/css/style/upload-images-page.css" rel="stylesheet" type="text/css">
+    <link href="/css/style/upload-images-page.css" rel="stylesheet" type="text/css">
 
     <!-- Common JS -->
-    <script src="/ywti_wa2021_war/js/utils.js"></script>
+    <script src="/js/utils.js"></script>
 
     <!-- Custom JS -->
-    <script src="/ywti_wa2021_war/js/upload-images-page.js"></script>
+    <script src="/js/upload-images-page.js"></script>
 
 </head>
 <body>
 <div class="mainWrapper w3-main">
     <header id="header-bar" class="">
-        <img id="small-logo" class="small-logo" src="/ywti_wa2021_war/utility/small-logo-transparent.png" >
+        <img id="small-logo" class="small-logo" src="/utility/small-logo-transparent.png" >
         <div id="navbar-area" class="topnav" ></div>
     </header>
     <main class="mainContent w3-container" >

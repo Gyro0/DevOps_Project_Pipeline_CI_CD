@@ -9,7 +9,7 @@ JS to provide utilities
 
 
 // Context path
-const contextPath = "http://localhost:8080/ywti_wa2021_war";
+const contextPath = "http://localhost:8080";
 
 document.addEventListener("DOMContentLoaded", function(event) {
     // Load navbar and footer

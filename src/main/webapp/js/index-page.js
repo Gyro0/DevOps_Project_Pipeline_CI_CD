@@ -98,7 +98,7 @@ function loadAdvertisementList(res){
                 "<a href=\"" + contextPath + "/adv-show/" + idAdv + "\">" +  "" +
                 "<article class=\"advertisement w3-section w3-container w3-panel w3-card-4\">" +
                 "<span class=\"advSmallImage\">" +
-                "<img id=\"img"+ idAdv +"\" class=\"small-adv-img\" src=\"/ywti_wa2021_war/utility/img-default.jpg\" alt=''/>"+
+                "<img id=\"img"+ idAdv +"\" class=\"small-adv-img\" src=\"/utility/img-default.jpg\" alt=''/>"+
                 "</span>" +
                 "<span class=\"advSummary\">" +
                 "<h3 class\"h3\">" + title + "</h3>" +
@@ -136,7 +136,7 @@ function loadAdvertisementList(res){
 
         // fix broken images
         $(".small-adv-img").on("error", function () {
-            $(this).attr("src", "/ywti_wa2021_war/utility/img-default.jpg");
+            $(this).attr("src", "/utility/img-default.jpg");
         });
 
         //For each adv, load an image

@@ -1,0 +1,67 @@
+# ==========================================
+# Étape 1 : Build stage (compilation Maven)
+# ==========================================
+FROM maven:3.9-eclipse-temurin-17 AS builder
+
+WORKDIR /build
+
+# Copier uniquement pom.xml pour cache des dépendances
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# Copier le code source
+COPY src ./src
+
+# Compiler et générer le WAR
+RUN mvn clean package -DskipTests -B
+
+# ==========================================
+# Étape 2 : Runtime stage (Tomcat)
+# ==========================================
+FROM tomcat:10.1-jdk17
+
+# Métadonnées
+LABEL maintainer="gyro@example.com"
+LABEL description="YourWayToItaly - Application JEE de réservation touristique"
+LABEL version="1.0"
+LABEL build-date="2025-11-09"
+
+# Variables d'environnement pour PostgreSQL
+ENV CATALINA_HOME=/usr/local/tomcat
+ENV POSTGRES_HOST=postgres
+ENV POSTGRES_PORT=5433
+ENV POSTGRES_DB=yourwaytoitaly
+ENV POSTGRES_USER=ywti
+ENV POSTGRES_PASSWORD=ywti
+
+# Installer unzip pour décompresser le WAR
+RUN apt-get update && \
+    apt-get install -y unzip && \
+    rm -rf /var/lib/apt/lists/*
+
+# Supprimer les applications par défaut de Tomcat
+RUN rm -rf ${CATALINA_HOME}/webapps/*
+
+# Copier le WAR depuis le builder
+COPY --from=builder /build/target/ywti-wa2021-1.0-SNAPSHOT.war /tmp/ywti_wa2021_war.war
+
+# Décompresser le WAR dans webapps/ROOT
+RUN mkdir -p ${CATALINA_HOME}/webapps/ywti_wa2021_war && \
+    cd ${CATALINA_HOME}/webapps/ywti_wa2021_war && \
+    unzip -q /tmp/ywti_wa2021_war.war && \
+    rm /tmp/ywti_wa2021_war.war
+
+# Modifier context.xml pour utiliser les variables d'environnement
+RUN if [ -f ${CATALINA_HOME}/webapps/ROOT/META-INF/context.xml ]; then \
+    sed -i 's|jdbc:postgresql://localhost:5433|jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}|g' ${CATALINA_HOME}/webapps/ywti_wa2021_war/META-INF/context.xml; \
+    fi
+
+# Exposer le port 8080
+EXPOSE 8080
+
+# Healthcheck pour vérifier que Tomcat fonctionne
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/ywti_wa2021_war/html/index.html || exit 1
+
+# Démarrer Tomcat
+CMD ["catalina.sh", "run"]

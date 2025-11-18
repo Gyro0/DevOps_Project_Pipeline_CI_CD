@@ -208,7 +208,7 @@ function loadRate(req) {
     let rate = jsonData['rate'];
 
     // Presents the JSON obj
-    let info = "<img src=\"/ywti_wa2021_war/css/image/" + rate + "s.jpg\" />\n";
+    let info = "<img src=\"/css/image/" + rate + "s.jpg\" />\n";
     document.getElementById("advRate").innerHTML = info;
 }
 
@@ -241,7 +241,7 @@ function loadFeedbackList(req) {
                     "<div class=\"feedbackElement\">"  +
                         "<p class=\"feedbackElement\">" + "\"" + text + "\"" + "</p>" +
                         "<p class=\"feedbackElement\">" + "" + "</p>" +
-                        "<img src=\"/ywti_wa2021_war/css/image/" + rate + "s.jpg\"  alt=\"\" />" +
+                        "<img src=\"/css/image/" + rate + "s.jpg\"  alt=\"\" />" +
                     "</div>\n";
             }
 
@@ -312,7 +312,7 @@ function loadImageList(req) {
             "<button class=\"w3-button slidesButton\" onclick=\"plusDivs(-1)\">&#10094;</button>"
             + "<button class=\"w3-button slidesButton\" onClick=\"plusDivs(+1)\">&#10095;</button>";
     } else {
-        str = "<img class=\"mySlides\" src=\"/ywti_wa2021_war/css/image/noImage.jpg\" alt=''/>\n" ;
+        str = "<img class=\"mySlides\" src=\"/css/image/noImage.jpg\" alt=''/>\n" ;
         str2 = "";
     }
 
@@ -329,7 +329,7 @@ function loadImageList(req) {
         // If all img were removed: show default img and then remove buttons
         slides = document.getElementsByClassName("mySlides");
         if (slides.length===0) {
-            str ="<img class=\"mySlides\" src=\"/ywti_wa2021_war/css/image/noImage.jpg\" alt='' />\n" ;
+            str ="<img class=\"mySlides\" src=\"/css/image/noImage.jpg\" alt='' />\n" ;
             str2 = "";
             document.getElementById("advImages").innerHTML = str;
             document.getElementById("buttContainer").innerHTML = str2;

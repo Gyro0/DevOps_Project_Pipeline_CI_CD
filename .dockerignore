@@ -1,18 +1,36 @@
-# Fichiers inutiles pour l'image Docker
+# Git
 .git
 .gitignore
+
+# IDE
 .idea
+*.iml
 .vscode
-*.md
-README.md
-Jenkinsfile
+
+# Maven target (sauf le WAR final)
+target/classes
+target/test-classes
+target/generated-sources
+target/generated-test-sources
+target/maven-archiver
+target/maven-status
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
 javadoc/
-src/
-target/classes/
-target/maven-status/
-target/generated-sources/
-target/test-classes/
-target/surefire-reports/
-lib/
-test.txt
-hw1-score.txt
+
+# Tests seulement (PAS tout src/)
+src/test/
+
+# Fichiers temporaires
+*.tmp
+*.bak
+
+# Environment
+.env

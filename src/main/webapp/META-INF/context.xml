@@ -25,14 +25,15 @@
 <Context>
 
     <Resource name="jdbc/YWTI"
-          type="javax.sql.DataSource"
-          driverClassName="org.postgresql.Driver"
-          url="jdbc:postgresql://localhost:5433/yourwaytoitaly"
-          username="ywti"
-          password="ywti"
-          maxTotal="20"
-          maxIdle="10"
-          maxWaitMillis="-1"/>
+              auth="Container"
+              type="javax.sql.DataSource"
+              driverClassName="org.postgresql.Driver"
+              url="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
+              username="${POSTGRES_USER}"
+              password="${POSTGRES_PASSWORD}"
+              maxTotal="80"
+              maxIdle="30"
+              maxWaitMillis="10000"/>
 
     <Parameter name="emailSite" value="yourwaytoitalywebapp@gmail.com"
                override="false"/>

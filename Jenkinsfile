@@ -22,7 +22,7 @@ pipeline {
 
                 echo 'Clonage du repository depuis GitHub...'
                 checkout scm
-            }+
+            }
 
         }
         

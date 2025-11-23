@@ -1,0 +1,70 @@
+---
+# PostgreSQL Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      securityContext:
+        fsGroup: 999
+        runAsUser: 999
+      containers:
+      - name: postgres
+        image: postgres:15
+        ports:
+        - containerPort: 5433
+        env:
+        - name: POSTGRES_DB
+          value: yourwaytoitaly
+        - name: POSTGRES_USER
+          value: ywti
+        - name: POSTGRES_PASSWORD
+          value: ywti_password
+        - name: PGPORT
+          value: "5433"
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        args: ["-p", "5433"]
+
+---
+# Application Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ywti-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ywti-app
+  template:
+    metadata:
+      labels:
+        app: ywti-app
+    spec:
+      containers:
+      - name: ywti-app
+        image: gyro0/ywti:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        env:
+        - name: POSTGRES_HOST
+          value: postgres
+        - name: POSTGRES_PORT
+          value: "5433"
+        - name: POSTGRES_DB
+          value: yourwaytoitaly
+        - name: POSTGRES_USER
+          value: ywti
+        - name: POSTGRES_PASSWORD
+          value: ywti_password

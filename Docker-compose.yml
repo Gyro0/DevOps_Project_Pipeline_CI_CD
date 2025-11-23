@@ -1,0 +1,59 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: ywti-postgres
+    environment:
+      POSTGRES_DB: yourwaytoitaly
+      POSTGRES_USER: ywti
+      POSTGRES_PASSWORD: ywti_password
+      PGPORT: 5433
+    ports:
+      - "5433:5433"
+    command: -p 5433
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/database/CreateTables.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./src/database/INSERT.sql:/docker-entrypoint-initdb.d/02-data.sql
+    networks:
+      - ywti-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ywti -d yourwaytoitaly -p 5433"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: Gyro0/ywti:1.0
+    container_name: ywti-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5433
+      POSTGRES_DB: yourwaytoitaly
+      POSTGRES_USER: ywti
+      POSTGRES_PASSWORD: ywti_password
+    ports:
+      - "8081:8080"
+    networks:
+      - ywti-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/ywti_wa2021_war/html/index.html"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  ywti-network:
+    driver: bridge

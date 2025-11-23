@@ -1,0 +1,110 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: init-db
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: init-db
+        image: postgres:15
+        command:
+        - /bin/bash
+        - -c
+        - |
+          cat <<'EOF' | psql -h postgres -p 5433 -U ywti -d yourwaytoitaly
+          CREATE TABLE IF NOT EXISTS City (
+           ID_city SERIAL PRIMARY KEY,
+           name VARCHAR(100) NOT NULL
+          );
+
+          CREATE TABLE IF NOT EXISTS Type_advertisement (
+           ID_type SERIAL PRIMARY KEY,
+           type VARCHAR(100) NOT NULL
+          );
+
+          CREATE TABLE IF NOT EXISTS Company (
+           email_c VARCHAR(100) PRIMARY KEY,
+           name_c VARCHAR(100) NOT NULL,
+           phone_number VARCHAR(100) NOT NULL,
+           address VARCHAR(200) NOT NULL,
+           password VARCHAR(100) NOT NULL,
+           ID_city INT NOT NULL,
+           FOREIGN KEY (ID_city) REFERENCES City (ID_city)
+          );
+
+          CREATE TABLE IF NOT EXISTS Tourist (
+           email_t VARCHAR(100) PRIMARY KEY,
+           surname VARCHAR(100) NOT NULL,
+           name VARCHAR(100) NOT NULL,
+           birth_date DATE NOT NULL,
+           phone_number VARCHAR(100) NOT NULL,
+           address VARCHAR(200) NOT NULL,
+           password VARCHAR(100) NOT NULL,
+           ID_city INT NOT NULL,
+           FOREIGN KEY (ID_city) REFERENCES City (ID_city)
+          );
+
+          CREATE TABLE IF NOT EXISTS Advertisement (
+           ID_advertisement SERIAL PRIMARY KEY,
+           title VARCHAR(200) NOT NULL,
+           description VARCHAR(10000) NOT NULL,
+           score INT NOT NULL,
+           price INT NOT NULL,
+           num_tot_item INT NOT NULL,
+           date_start DATE NOT NULL,
+           date_end DATE NOT NULL,
+           time_start TIME NOT NULL,
+           time_end TIME NOT NULL,
+           email_c VARCHAR(100) NOT NULL,
+           ID_type INT NOT NULL,
+           FOREIGN KEY (email_c) REFERENCES Company (email_c),
+           FOREIGN KEY (ID_type) REFERENCES Type_advertisement (ID_type)
+          );
+
+          CREATE TABLE IF NOT EXISTS Tourist_Advertisement (
+           email_t VARCHAR(100) NOT NULL,
+           ID_advertisement INT NOT NULL,
+           num_items INT NOT NULL,
+           rating INT,
+           PRIMARY KEY (email_t, ID_advertisement),
+           FOREIGN KEY (email_t) REFERENCES Tourist (email_t),
+           FOREIGN KEY (ID_advertisement) REFERENCES Advertisement (ID_advertisement)
+          );
+
+          CREATE TABLE IF NOT EXISTS Review (
+           ID_review SERIAL PRIMARY KEY,
+           title VARCHAR(100) NOT NULL,
+           description VARCHAR(1000) NOT NULL,
+           email_t VARCHAR(100) NOT NULL,
+           ID_advertisement INT NOT NULL,
+           FOREIGN KEY (email_t) REFERENCES Tourist (email_t),
+           FOREIGN KEY (ID_advertisement) REFERENCES Advertisement (ID_advertisement)
+          );
+
+          CREATE TABLE IF NOT EXISTS Image (
+           ID_image SERIAL PRIMARY KEY,
+           image BYTEA NOT NULL,
+           ID_advertisement INT NOT NULL,
+           FOREIGN KEY (ID_advertisement) REFERENCES Advertisement (ID_advertisement)
+          );
+          EOF
+
+          # Insert data only if tables are empty
+          COUNT=$(psql -h postgres -p 5433 -U ywti -d yourwaytoitaly -t -c "SELECT COUNT(*) FROM City;")
+          if [ "$COUNT" -eq 0 ]; then
+            cat <<'EOF' | psql -h postgres -p 5433 -U ywti -d yourwaytoitaly
+            INSERT INTO City (name) VALUES ('Abano Terme'), ('Affi'), ('Agugliaro'), ('Altavilla Vicentina'), ('Altissimo'), ('Anguillara Veneta'), ('Arbizzano-Santa Maria'), ('Arcole'), ('Ariano nel Polesine'), ('Arquà Petrarca'), ('Arquà Polesine'), ('Arre'), ('Arsiè'), ('Arzergrande'), ('Asiago'), ('Asolo'), ('Avio'), ('Badia Calavena'), ('Badia Polesine'), ('Badoere'), ('Baone'), ('Barbarano Mossano'), ('Barbona'), ('Bardolino'), ('Baricetta'), ('Bassano del Grappa'), ('Battaglia Terme'), ('Belluno'), ('Bergantino'), ('Borgoricco'), ('Boschi SantAnna'), ('Bosco Chiesanuova'), ('Bovolenta'), ('Bovolone'), ('Breganze'), ('Breda di Piave'), ('Brendola'), ('Brenta'), ('Brentino Belluno'), ('Brenzone sul Garda'), ('Bressanvido'), ('Brez'), ('Brogliano'), ('Brugine'), ('Bussolengo'), ('Buttapietra'), ('Ca Savio'), ('Cadoneghe'), ('Caldiero'), ('Caldogno'), ('Caltrano'), ('Campagna Lupia'), ('Campegine'), ('Campodarsego'), ('Campoformido'), ('Campolongo Maggiore'), ('Camponogara'), ('Canevino'), ('Caorle'), ('Caprino Veronese'), ('Carbonera'), ('Carpenedolo'), ('Carrè'), ('Cartigliano'), ('Casale sul Sile'), ('Casaleone'), ('Casalserugo'), ('Castagnaro'), ('Castelfranco Veneto'), ('Castelmassa'), ('Castelnuovo del Garda'), ('Cerea'), ('Cerro Veronese'), ('Cesiomaggiore'), ('Chioggia'), ('Cimadolmo'), ('Cinto Euganeo'), ('Cittadella'), ('Cles'), ('Cologna Veneta'), ('Colognola ai Colli'), ('Conegliano'), ('Conselve'), ('Cornuda'), ('Correzzola'), ('Costabissara'), ('Creazzo'), ('Crespano del Grappa'), ('Crespino'), ('Curtarolo'), ('Dolo'), ('Due Carrare'), ('Dueville'), ('Este'), ('Fara Vicentino'), ('Feltre'), ('Ficarolo'), ('Fiorenzuola dArda'), ('Fontaniva'), ('Fossò'), ('Galzignano Terme'), ('Gambellara'), ('Garda'), ('Gavello'), ('Giacciano con Baruchella'), ('Goito'), ('Grancona'), ('Grezzana'), ('Grisignano di Zocco');
+            INSERT INTO Type_advertisement (type) VALUES ('Museum'), ('Tour'), ('Restaurant'), ('Beach'), ('Park'), ('Monument'), ('Theater'), ('Cinema'), ('Concert'), ('Festival'), ('Market'), ('Shop'), ('Hotel'), ('Hostel'), ('Other');
+            INSERT INTO Company (email_c, name_c, phone_number, address, password, ID_city) VALUES ('company1@example.com', 'Tourism Venice', '+39 041 1234567', 'Via Roma 1, Venice', 'password123', 1);
+            INSERT INTO Tourist (email_t, surname, name, birth_date, phone_number, address, password, ID_city) VALUES ('tourist1@example.com', 'Rossi', 'Mario', '1990-01-15', '+39 340 1234567', 'Via Dante 10, Padua', 'password123', 1);
+          EOF
+            echo "Database initialized successfully!"
+          else
+            echo "Database already initialized, skipping data insertion."
+          fi
+        env:
+        - name: PGPASSWORD
+          value: ywti_password
+  backoffLimit: 3

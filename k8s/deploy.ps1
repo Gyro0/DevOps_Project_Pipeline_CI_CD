@@ -1,7 +1,16 @@
 # Script de déploiement Kubernetes - Étape 5
-# YourWayToItaly
+# YourWayToItaly - Docker Desktop
 
-Write-Host "=== Déploiement sur Kubernetes ===" -ForegroundColor Cyan
+Write-Host "=== Déploiement sur Kubernetes (Docker Desktop) ===" -ForegroundColor Cyan
+
+# Vérifier le contexte
+$context = kubectl config current-context
+if ($context -ne "docker-desktop") {
+    Write-Host "Erreur: Veuillez basculer vers le contexte docker-desktop" -ForegroundColor Red
+    Write-Host "Commande: kubectl config use-context docker-desktop" -ForegroundColor Yellow
+    exit 1
+}
+Write-Host "Contexte actuel: $context" -ForegroundColor Green
 
 # Appliquer les fichiers YAML
 Write-Host "`n1. Déploiement des applications..." -ForegroundColor Yellow
@@ -29,6 +38,9 @@ kubectl get ingress
 
 Write-Host "`n=== Déploiement terminé ===" -ForegroundColor Cyan
 Write-Host "`nPour accéder à l'application:" -ForegroundColor Green
-Write-Host "1. Ouvrez un terminal et exécutez: minikube service ywti-app --url" -ForegroundColor Yellow
-Write-Host "2. Gardez ce terminal ouvert" -ForegroundColor Yellow
-Write-Host "3. Accédez à l'URL affichée + /html/index.html dans votre navigateur" -ForegroundColor Yellow
+Write-Host "1. Ajoutez cette ligne à C:\Windows\System32\drivers\etc\hosts (en tant qu'admin):" -ForegroundColor Yellow
+Write-Host "   127.0.0.1    ywti.local" -ForegroundColor Cyan
+Write-Host "`n2. Accédez à l'application via:" -ForegroundColor Yellow
+Write-Host "   http://ywti.local/html/index.html" -ForegroundColor Cyan
+Write-Host "`n   OU via NodePort directement:" -ForegroundColor Yellow
+Write-Host "   http://localhost:30080/html/index.html" -ForegroundColor Cyan

@@ -99,7 +99,7 @@ spec:
             INSERT INTO Type_advertisement (type) VALUES ('Museum'), ('Tour'), ('Restaurant'), ('Beach'), ('Park'), ('Monument'), ('Theater'), ('Cinema'), ('Concert'), ('Festival'), ('Market'), ('Shop'), ('Hotel'), ('Hostel'), ('Other');
             INSERT INTO Company (email_c, name_c, phone_number, address, password, ID_city) VALUES ('company1@example.com', 'Tourism Venice', '+39 041 1234567', 'Via Roma 1, Venice', 'password123', 1);
             INSERT INTO Tourist (email_t, surname, name, birth_date, phone_number, address, password, ID_city) VALUES ('tourist1@example.com', 'Rossi', 'Mario', '1990-01-15', '+39 340 1234567', 'Via Dante 10, Padua', 'password123', 1);
-            EOF
+          EOF
             echo "Database initialized successfully!"
           else
             echo "Database already initialized, skipping data insertion."

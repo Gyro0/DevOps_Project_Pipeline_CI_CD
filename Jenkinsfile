@@ -8,7 +8,7 @@ pipeline {
     
     environment {
         MAVEN_OPTS = '-Xmx1024m'
-        //SCANNER_HOME = tool 'SonarScanner'
+        SCANNER_HOME = tool 'SonarScanner'
     }
     
     stages {
@@ -82,30 +82,30 @@ pipeline {
             }
         }
         
-        // stage('5. Analyse SonarQube') {
-        //     steps {
-        //         echo 'Lancement de l\'analyse SonarQube...'
-        //         withSonarQubeEnv('SonarQube') {
-        //             script{
-        //                 if (isUnix()){
-        //                     sh 'mvn sonar:sonar'
-        //                 } 
-        //                 else{
-        //                     bat 'mvn sonar:sonar'
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('5. Analyse SonarQube') {
+            steps {
+                echo 'Lancement de l\'analyse SonarQube...'
+                withSonarQubeEnv('SonarQube') {
+                    script{
+                        if (isUnix()){
+                            sh 'mvn sonar:sonar'
+                        } 
+                        else{
+                            bat 'mvn sonar:sonar'
+                        }
+                    }
+                }
+            }
+        }
         
-        // stage('6. Quality Gate') {
-        //     steps {
-        //         echo 'Verification du Quality Gate...'
-        //         timeout(time: 5, unit: 'MINUTES') {
-        //             waitForQualityGate abortPipeline: true
-        //         }
-        //     }
-        // }
+        stage('6. Quality Gate') {
+            steps {
+                echo 'Verification du Quality Gate...'
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
     }
     
     post {

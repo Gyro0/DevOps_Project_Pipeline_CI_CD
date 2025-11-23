@@ -23,7 +23,7 @@ pipeline {
                 echo 'Clonage du repository depuis GitHub...'
                 checkout scm
             }+
-            
+
         }
         
         stage('2. Compiler le projet') {
@@ -118,8 +118,8 @@ pipeline {
         }
         always {
             echo "workspace: ${WORKSPACE}"
-            //echo 'Cleaning workspace...'
-            //cleanWs()
+            echo 'Cleaning workspace...'
+            cleanWs()
         }
     }
 }

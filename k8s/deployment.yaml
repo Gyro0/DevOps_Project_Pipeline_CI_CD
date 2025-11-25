@@ -1,5 +1,3 @@
----
-# PostgreSQL Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,9 +12,6 @@ spec:
       labels:
         app: postgres
     spec:
-      securityContext:
-        fsGroup: 999
-        runAsUser: 999
       containers:
       - name: postgres
         image: postgres:15
@@ -31,18 +26,17 @@ spec:
           value: ywti_password
         - name: PGPORT
           value: "5433"
-        - name: PGDATA
-          value: /var/lib/postgresql/data/pgdata
+        # Custom command to run on port 5433
+        command: ["docker-entrypoint.sh"]
         args: ["-p", "5433"]
 
 ---
-# Application Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ywti-app
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: ywti-app
@@ -54,7 +48,7 @@ spec:
       containers:
       - name: ywti-app
         image: gyro0/ywti:latest
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
         env:

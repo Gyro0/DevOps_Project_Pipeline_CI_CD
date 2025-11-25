@@ -38,7 +38,7 @@ public class AbstractDAO {
 
     /**
      * Cleans the operations
-     *TESTTESTTSETTESTtest
+     *TESTTESTTSETTESTtesttest
      * @param stmnt     the prepared statement
      * @param conn      the connection to the database
      * @throws SQLException if any error occurs while accessing the database

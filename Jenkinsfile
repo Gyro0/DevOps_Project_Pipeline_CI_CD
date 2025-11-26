@@ -11,8 +11,7 @@ pipeline {
         SCANNER_HOME = tool 'SonarScanner'
         DOCKER_IMAGE = 'gyro0/ywti'
         DOCKER_TAG = "${env.BUILD_NUMBERN: 1.5}"
-        // Capture the branch name from the Git webhook
-        GIT_BRANCH = "${env.GIT_BRANCH ?: 'develop'}"
+        GIT_BRANCH = "develop"
     }
     
     stages {
@@ -150,7 +149,7 @@ pipeline {
     post {
         success {
             echo '==============Le Pipeline est execute avec succes!=============='
-            echo "Branche: ${env.GIT_BRANCH}"
+            echo "Branche: ${GIT_BRANCH}"
             echo "Image Docker publiee: ${DOCKER_IMAGE}:${DOCKER_TAG}"
         }
         failure {

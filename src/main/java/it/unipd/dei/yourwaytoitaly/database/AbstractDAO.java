@@ -18,7 +18,7 @@ public class AbstractDAO {
 
     /**
      * Cleans the operations
-     *
+     * test
      * @param stmnt     the prepared statement
      * @param result    the result
      * @param conn      the connection to the database

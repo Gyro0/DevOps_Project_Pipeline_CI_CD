@@ -40,4 +40,4 @@ kubectl get ingress
 
 Write-Host "=== Deploiement termine ===" -ForegroundColor Cyan
 Write-Host "Lien vers l'application:" -ForegroundColor Green
-Write-Host "   http://localhost/html/index.html" -ForegroundColor Cyan
+Write-Host "   http://ywti.local/html/index.html" -ForegroundColor Cyan

@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: grafana
-  # Removed namespace to deploy in current context (default)
 spec:
   replicas: 1
   selector:
@@ -23,7 +22,6 @@ spec:
               value: admin
             - name: GF_SECURITY_ADMIN_PASSWORD
               value: admin
-            # Skip plugins for faster startup in minimal setup
 
 ---
 apiVersion: v1

@@ -25,7 +25,7 @@ Write-Host "3. Configuration de Prometheus" -ForegroundColor Yellow
 kubectl apply -f prometheus-config.yaml
 
 Write-Host "4. Attente du demarrage des pods" -ForegroundColor Yellow
-Start-Sleep -Seconds 30
+Start-Sleep -Seconds 10
 
 Write-Host "5. etat du cluster:" -ForegroundColor Green
 kubectl get all
@@ -34,4 +34,4 @@ Write-Host "=== Deploiement termine ===" -ForegroundColor Cyan
 Write-Host "Lien vers Grafana:" -ForegroundColor Green
 Write-Host "   http://localhost:30300" -ForegroundColor Cyan
 Write-Host "Lien vers Prometheus:" -ForegroundColor Green
-Write-Host "   http://localhost:30900" -ForegroundColor Cyan
+Write-Host "   http://localhost:30090" -ForegroundColor Cyan

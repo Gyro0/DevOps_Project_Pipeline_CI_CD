@@ -1,14 +1,20 @@
 package it.unipd.dei.yourwaytoitaly.filter;
 
-import it.unipd.dei.yourwaytoitaly.servlet.LoginServlet;
+import java.io.IOException;
+import java.util.Base64;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.util.Base64;
+
+import it.unipd.dei.yourwaytoitaly.servlet.LoginServlet;
 
 /**
  * Filter checking the presence of an active session to access the resources
@@ -24,7 +30,7 @@ public class AuthenticationCheck implements Filter {
     * */
     private static final Base64.Decoder DECODER = Base64.getDecoder();
     /*
-     * The configuration for the filter
+     * The configuration for the filter ////testtset
      * */
     private FilterConfig config = null;
     /*

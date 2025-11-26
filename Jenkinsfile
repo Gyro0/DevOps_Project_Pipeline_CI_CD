@@ -9,10 +9,19 @@ pipeline {
     environment {
         MAVEN_OPTS = '-Xmx1024m'
         SCANNER_HOME = tool 'SonarScanner'
+        DOCKER_IMAGE = 'gyro0/ywti'
+        DOCKER_TAG = "${env.BUILD_NUMBERN: 1.5}"
+        GIT_BRANCH = "develop"
     }
     
     stages {
         stage('1. Cloner le repo') {
+            when {
+                anyOf {
+                    branch 'main'
+                    branch 'develop'
+                }
+            }
             steps {
                 script{
                     if (isUnix()){
@@ -20,10 +29,9 @@ pipeline {
                     } 
                 }
 
-                echo 'Clonage du repository depuis GitHub...'
+                echo "Clonage du repository depuis GitHub (branche: ${env.GIT_BRANCH})..."
                 checkout scm
             }
-
         }
         
         stage('2. Compiler le projet') {
@@ -37,7 +45,6 @@ pipeline {
                         bat 'mvn clean compile'
                     }
                 }
-
             }
         }
         
@@ -52,7 +59,6 @@ pipeline {
                         bat 'mvn test'
                     }
                 }
-
             }
             post {
                 always {
@@ -60,8 +66,6 @@ pipeline {
                 }
             }
         }
-
-        
         
         stage('4. Generer le package WAR/JAR') {
             steps {
@@ -74,7 +78,6 @@ pipeline {
                         bat 'mvn package -DskipTests'
                     } 
                 }
-
             }
             post {
                 success {
@@ -107,11 +110,47 @@ pipeline {
                 }
             }
         }
+        
+        stage('7. Build Docker Image') {
+            steps {
+                echo 'Construction de l\'image Docker...'
+                script {
+                    if (isUnix()) {
+                        sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                        sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
+                    } else {
+                        bat "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                        bat "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
+                    }
+                }
+            }
+        }
+        
+        stage('8. Push Docker Image') {
+            steps {
+                echo 'Push de l\'image vers Docker Hub...'
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        if (isUnix()) {
+                            sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                            sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                            sh "docker push ${DOCKER_IMAGE}:latest"
+                        } else {
+                            bat 'echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
+                            bat "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                            bat "docker push ${DOCKER_IMAGE}:latest"
+                        }
+                    }
+                }
+            }
+        }
     }
     
     post {
         success {
             echo '==============Le Pipeline est execute avec succes!=============='
+            echo "Branche: ${GIT_BRANCH}"
+            echo "Image Docker publiee: ${DOCKER_IMAGE}:${DOCKER_TAG}"
         }
         failure {
             echo '==============Le pipeline a echoue.=============='

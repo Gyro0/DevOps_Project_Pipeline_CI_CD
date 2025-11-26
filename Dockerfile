@@ -17,7 +17,8 @@ ENV CATALINA_HOME=/usr/local/tomcat \
     POSTGRES_PASSWORD=ywti_password
 
 # Install dependencies and clean up
-RUN apt-get update && apt-get install -y unzip && rm -rf /var/lib/apt/lists/* && \
+RUN apt-get update && apt-get install -y unzip &&\
+    rm -rf /var/lib/apt/lists/* &&\
     rm -rf ${CATALINA_HOME}/webapps/*
 
 # Setup Application

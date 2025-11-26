@@ -14,7 +14,7 @@ if ($context -ne "docker-desktop") {
 
 Write-Host "Contexte actuel: $context" -ForegroundColor Green
 
-# Appliquer les fichiers YAML
+# Appliquer tous les fichiers YAML
 Write-Host "1. Deploiement des applications" -ForegroundColor Yellow
 kubectl apply -f deployment.yaml
 

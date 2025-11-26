@@ -233,10 +233,8 @@ public class AdvertisementDAO extends AbstractDAO{
      *             if any error occurs.
      */
     public static List<Advertisement> searchAdvertisement(String reqEmail) throws SQLException, NamingException {
-        final String STATEMENT =
-                "SELECT *\n" +
-                        "FROM ADVERTISEMENT\n" +
-                        "WHERE email_c = ? AND NUM_TOT_ITEM > 0;";
+        final String STATEMENT =new StringBuilder("SELECT * FROM ADVERTISEMENT WHERE email_c = ? AND NUM_TOT_ITEM > 0;").toString();
+
         Connection con = DataSourceProvider.getDataSource().getConnection();
         PreparedStatement pstmt = null;
         ResultSet rs = null;

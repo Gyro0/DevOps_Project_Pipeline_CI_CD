@@ -15,7 +15,7 @@ kind: Service
 metadata:
   name: ywti-app
 spec:
-  type: ClusterIP # Use ClusterIP for internal communication (Ingress handles external)
+  type: ClusterIP # ClusterIP for internal communication
   selector:
     app: ywti-app
   ports:

@@ -215,7 +215,7 @@ public class BookingDAO extends AbstractDAO{
                         rs.getInt("num_booking"),
                         rs.getString("state"));
 
-                if(booking.getState()!="DELETED"){
+                if(!booking.getState().equals("DELETED")){
                     bookings.add(booking);
                 }
             }

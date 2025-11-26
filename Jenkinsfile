@@ -119,6 +119,7 @@ pipeline {
                         sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
                     } else {
                         bat "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                        bat "docker rmi ${DOCKER_IMAGE}:latest || exit 0"
                         bat "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
                     }
                 }

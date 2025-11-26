@@ -10,11 +10,19 @@ pipeline {
         MAVEN_OPTS = '-Xmx1024m'
         SCANNER_HOME = tool 'SonarScanner'
         DOCKER_IMAGE = 'gyro0/ywti'
-        DOCKER_TAG = "${env.BUILD_NUMBER}" //add a .env file with specified build number
+        DOCKER_TAG = "${env.BUILD_NUMBERN: 1.5}"
+        // Capture the branch name from the Git webhook
+        GIT_BRANCH = "${env.GIT_BRANCH ?: 'develop'}"
     }
     
     stages {
         stage('1. Cloner le repo') {
+            when {
+                anyOf {
+                    branch 'main'
+                    branch 'develop'
+                }
+            }
             steps {
                 script{
                     if (isUnix()){
@@ -22,7 +30,7 @@ pipeline {
                     } 
                 }
 
-                echo 'Clonage du repository depuis GitHub...'
+                echo "Clonage du repository depuis GitHub (branche: ${env.GIT_BRANCH})..."
                 checkout scm
             }
         }
@@ -123,7 +131,6 @@ pipeline {
             steps {
                 echo 'Push de l\'image vers Docker Hub...'
                 script {
-                    // Use Jenkins credentials for Docker Hub login
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         if (isUnix()) {
                             sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
@@ -143,6 +150,7 @@ pipeline {
     post {
         success {
             echo '==============Le Pipeline est execute avec succes!=============='
+            echo "Branche: ${env.GIT_BRANCH}"
             echo "Image Docker publiee: ${DOCKER_IMAGE}:${DOCKER_TAG}"
         }
         failure {

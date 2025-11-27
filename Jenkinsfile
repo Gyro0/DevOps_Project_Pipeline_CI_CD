@@ -10,7 +10,7 @@ pipeline {
         MAVEN_OPTS = '-Xmx1024m'
         SCANNER_HOME = tool 'SonarScanner'
         DOCKER_IMAGE = 'gyro0/ywti'
-        DOCKER_TAG = "${env.BUILD_NUMBERN: 1.5}"
+        DOCKER_TAG = "${env.BUILD_NUMBERN?: 1.5}"
         GIT_BRANCH = "develop"
     }
     
@@ -18,7 +18,6 @@ pipeline {
         stage('1. Cloner le repo') {
             when {
                 anyOf {
-                    branch 'main'
                     branch 'develop'
                 }
             }
@@ -120,6 +119,7 @@ pipeline {
                         sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
                     } else {
                         bat "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                        bat "docker rmi ${DOCKER_IMAGE}:latest || exit 0"
                         bat "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
                     }
                 }

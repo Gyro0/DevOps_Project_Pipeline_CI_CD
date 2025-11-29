@@ -10,7 +10,7 @@ pipeline {
         MAVEN_OPTS = '-Xmx1024m'
         SCANNER_HOME = tool 'SonarScanner'
         DOCKER_IMAGE = 'gyro0/ywti'
-        DOCKER_TAG = "${env.BUILD_NUMBER}"
+        DOCKER_TAG = "2.0"
         GIT_BRANCH = "develop"
     }
     
@@ -116,6 +116,8 @@ pipeline {
                 script {
                     if (isUnix()) {
                         sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                        bat "docker rmi ${DOCKER_IMAGE}:latest || exit 0"
+
                         sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
                     } else {
                         bat "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."

@@ -10,7 +10,7 @@ pipeline {
         MAVEN_OPTS = '-Xmx1024m'
         SCANNER_HOME = tool 'SonarScanner'
         DOCKER_IMAGE = 'gyro0/ywti'
-        DOCKER_TAG = "${env.BUILD_NUMBERN?: 1.5}"
+        DOCKER_TAG = "${env.BUILD_NUMBER}"
         GIT_BRANCH = "develop"
     }
     
@@ -144,6 +144,32 @@ pipeline {
                 }
             }
         }
+        
+        stage('9. Deploy to Kubernetes') {
+            steps {
+                echo 'Deploiement de l\'application sur Kubernetes...'
+                script {
+                    if (isUnix()) {
+                        sh 'cd k8s && ./deploy.sh'
+                    } else {
+                        bat 'cd k8s && powershell -ExecutionPolicy Bypass -File deploy.ps1'
+                    }
+                }
+            }
+        }
+        
+        stage('10. Deploy Monitoring Stack') {
+            steps {
+                echo 'Deploiement de Prometheus et Grafana...'
+                script {
+                    if (isUnix()) {
+                        sh 'cd k8s/monitoring && ./deploy.sh'
+                    } else {
+                        bat 'cd k8s\\monitoring && powershell -ExecutionPolicy Bypass -File deploy.ps1'
+                    }
+                }
+            }
+        }
     }
     
     post {
@@ -151,6 +177,9 @@ pipeline {
             echo '==============Le Pipeline est execute avec succes!=============='
             echo "Branche: ${GIT_BRANCH}"
             echo "Image Docker publiee: ${DOCKER_IMAGE}:${DOCKER_TAG}"
+            echo "Application deployee sur: http://ywti.local/html/index.html"
+            echo "Grafana: http://localhost:30300"
+            echo "Prometheus: http://localhost:30090"
         }
         failure {
             echo '==============Le pipeline a echoue.=============='

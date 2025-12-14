@@ -10,7 +10,7 @@ pipeline {
         MAVEN_OPTS = '-Xmx1024m'
         SCANNER_HOME = tool 'SonarScanner'
         DOCKER_IMAGE = 'gyro0/ywti'
-        DOCKER_TAG = "2.0"
+        DOCKER_TAG = "2.1"
         GIT_BRANCH = "develop"
     }
     

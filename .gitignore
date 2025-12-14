@@ -1,7 +1,3 @@
-# IntelliJ Idea
-*.iml
-.idea/
-
 # Java
 *.class
 target/
@@ -14,6 +10,3 @@ log/
 *.zip
 *.tar.gz
 *.rar
-
-### OSX ###
-.DS_Store

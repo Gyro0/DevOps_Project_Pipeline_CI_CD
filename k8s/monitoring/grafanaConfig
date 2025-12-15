@@ -1,3 +1,4 @@
 sum(rate(container_cpu_usage_seconds_total{pod=~"ywti-app.*|postgres.*", container!="POD"}[5m])) by (pod)
 
 sum(container_memory_usage_bytes{pod=~"ywti-app.*|postgres.*", container!="POD"}) by (pod)
+

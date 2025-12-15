@@ -7,7 +7,7 @@ Write-Host "=== Deploiement sur Kubernetes (Docker Desktop) ===" -ForegroundColo
 $context = kubectl config current-context
 if ($context -ne "docker-desktop") {
     Write-Host "Erreur: Veuillez basculer vers le contexte docker-desktop" -ForegroundColor Red
-    Write-Host "Commande: kubectl config use-context docker-desktop" -ForegroundColor Yellow
+    kubectl config use-context docker-desktop
     exit 1
 }
 
